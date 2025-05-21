@@ -12,7 +12,7 @@ module.exports = class ListService {
 
         const entry = {
             user: req.body.user,
-            role: req.body.rol,      // Nuevo campo
+            role: req.body.role,      // Nuevo campo
             cedula: req.body.cedula, // Nuevo campo
             state: req.body.state,
             page: req.body.page
@@ -51,8 +51,8 @@ module.exports = class ListService {
             filter["cedula"] = partialCedulaRegex;
         }
 
-        if (entry.rol) {
-            filter["rol"] = entry.rol;
+        if (entry.role) {
+            filter["role"] = entry.role;
         }
 
         if (entry.state)
