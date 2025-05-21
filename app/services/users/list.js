@@ -12,7 +12,7 @@ module.exports = class ListService {
 
         const entry = {
             user: req.body.user,
-            rol: req.body.rol,      // Nuevo campo
+            role: req.body.rol,      // Nuevo campo
             cedula: req.body.cedula, // Nuevo campo
             state: req.body.state,
             page: req.body.page
