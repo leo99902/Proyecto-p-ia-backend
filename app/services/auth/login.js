@@ -8,7 +8,6 @@ const config = require('../../config/config');
 
 const { encodedRole } = require('../../helper/manage-role');
 const ObjectValidator = require('../../helper/is-object');
-const { ca } = require('date-fns/locale');
 
 module.exports = class LoginService {
 
@@ -45,9 +44,9 @@ module.exports = class LoginService {
             user: user.user,
             name: user.name,
             email: user.email,
-            azrq: encodedRole(user.role)
+            role: encodedRole(user.role)
         };
-
+        console.log(payload);
         const token = jwt.sign(payload, config.JWT_SECRET, {
             expiresIn: 3600 * 8 // Sesión de 8hs      
         });
