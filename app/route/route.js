@@ -3,7 +3,7 @@
 const authCtrl = require('../controller/auth');
 const usersCtrl = require('../controller/users');
 
-const { tokenValidator } = require('./token-validator');
+const { token } = require('./token');
 
 exports.initializeRoutes = app => {
 
@@ -16,29 +16,29 @@ exports.initializeRoutes = app => {
         authCtrl.recoverPassword(req, res);
     });
 
-    app.post('/changePassword', tokenValidator, (req, res, next) => {
+    app.post('/changePassword', token, (req, res, next) => {
         authCtrl.changePassword(req, res);
     });
 
 
     // User
-    app.post('/createUser', tokenValidator, (req, res, next) => {
+    app.post('/createUser', token, (req, res, next) => {
         usersCtrl.create(req, res);
     });
 
-    app.post('/getUser', tokenValidator, (req, res, next) => {
+    app.post('/getUser', token, (req, res, next) => {
         usersCtrl.get(req, res);
     });
 
-    app.post('/editUser', tokenValidator, (req, res, next) => {
+    app.post('/editUser', token, (req, res, next) => {
         usersCtrl.edit(req, res);
     });
 
-    app.post('/listUsers', tokenValidator, (req, res, next) => {
+    app.post('/listUsers', token, (req, res, next) => {
         usersCtrl.list(req, res);
     });
 
-    app.post('/deleteUser', tokenValidator, (req, res, next) => {
+    app.post('/deleteUser', token, (req, res, next) => {
         usersCtrl.delete(req, res);
     });
 

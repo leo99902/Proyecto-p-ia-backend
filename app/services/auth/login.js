@@ -3,66 +3,67 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const operations = require('../../config/db/operations');
-const config = require('../../config/config');
+const dbOps = require('../../config/db/operations');
+const appConfig = require('../../config/config');
 
 const { encodedRole } = require('../../helper/manage-role');
-const ObjectValidator = require('../../helper/is-object');
+const validateFields = require('../../helper/is-object');
 
-module.exports = class LoginService {
+class AuthSessionHandler {
 
-    async process(req, res) {
+    async authenticate(request, response) {
         try {
-            
-            console.log('LoginService - process - Inicio de sesión');
+            console.log('AuthSessionHandler - authenticate - Intentando login');
 
-        let entry = {
-            user: req.body.user,
-            password: req.body.password
-        };
+            const credentials = {
+                username: request.body.user,
+                passwd: request.body.password
+            };
 
-        if (!entry.user || !entry.password)
-            return res.status(400).json({ message: 'El usuario y contraseña son requeridos' });
+            if (!credentials.username || !credentials.passwd) {
+                return response.status(400).json({ message: 'El usuario y contraseña son requeridos' });
+            }
 
-        entry = {
-            user: entry.user.trim(),
-            password: entry.password.trim()
-        };
+            credentials.username = credentials.username.trim();
+            credentials.passwd = credentials.passwd.trim();
 
-        if (ObjectValidator([entry.user, entry.password]))
-            return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
+            if (validateFields([credentials.username, credentials.passwd])) {
+                return response.status(400).json({ message: 'Usuario o contraseña incorrectos' });
+            }
 
-        const user = await operations.findOne('users', { 'user': entry.user });
-        if (!user)
-            return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
+            const foundUser = await dbOps.findOne('users', { 'user': credentials.username });
+            if (!foundUser) {
+                return response.status(400).json({ message: 'Usuario o contraseña incorrectos' });
+            }
 
-        const passwordMatching = await bcrypt.compare(entry.password, user.password);
-        if (!passwordMatching)
-            return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
+            const isPasswordValid = await bcrypt.compare(credentials.passwd, foundUser.password);
+            if (!isPasswordValid) {
+                return response.status(400).json({ message: 'Usuario o contraseña incorrectos' });
+            }
 
-        const payload = {
-            user: user.user,
-            name: user.name,
-            email: user.email,
-            azrq: encodedRole(user.role)
-        };
-        console.log(payload);
-        const token = jwt.sign(payload, config.JWT_SECRET, {
-            expiresIn: 3600 * 8 // Sesión de 8hs      
-        });
+            const jwtPayload = {
+                user: foundUser.user,
+                name: foundUser.name,
+                email: foundUser.email,
+                azrq: encodedRole(foundUser.role)
+            };
+            console.log(jwtPayload);
 
-        return res.status(200).json({
-            message: 'Autenticación correcta',
-            token
-        });
+            const authToken = jwt.sign(jwtPayload, appConfig.JWT_SECRET, {
+                expiresIn: 3600 * 8 // 8 horas de sesión
+            });
 
-        }catch (error) {
+            return response.status(200).json({
+                message: 'Autenticación correcta',
+                token: authToken
+            });
 
-            console.error('LoginService - process - Error en el inicio de sesión', error);
-            throw error;
+        } catch (err) {
+            console.error('AuthSessionHandler - authenticate - Error durante login', err);
+            throw err;
         }
     }
 
-    
-
 }
+
+module.exports = AuthSessionHandler;

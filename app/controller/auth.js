@@ -1,6 +1,6 @@
 'use strict';
 
-const LoginService = require('../services/auth/login');
+const AuthSessionHandler = require('../services/auth/login');
 
 const authCtrl = {};
 
@@ -8,10 +8,10 @@ authCtrl.login = async (req, res) => {
 
     try {
 
-        console.log('authCtrl [login]');
+        console.log('AuthSessionHandler');
 
-        const loginService = new LoginService();
-        await loginService.process(req, res);
+        const authSessionHandler = new AuthSessionHandler();
+        await authSessionHandler.authenticate(req, res);
     } catch (ex) {
 
         console.log('Exception authCtrl [login]: ', ex);
