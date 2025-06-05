@@ -18,9 +18,8 @@ tokenValidator.use((req, res, next) => {
             if (err)
                 return res.status(401).json({ error: 'Autenticación expirada'});
             else {
-                const endpoint = req.originalUrl.slice(1);
 
-                if (isValidRole(decoded.azrq, endpoint) || isValidRole(decoded.azrq, endpoint.split('?')[0]) || isValidRole(decoded.azrq, endpoint.split('/')[0])) {
+                if (isValidRole(decoded.azrq)) {
                     req.decoded = decoded;
                     next();
                 } else
