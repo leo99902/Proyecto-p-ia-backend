@@ -1,6 +1,6 @@
 'use strict';
 
-const authCtrl = require('../controller/auth');
+const authenticationCtrl = require('../controller/authentication');
 const usersCtrl = require('../controller/users');
 
 const { token } = require('./token');
@@ -9,16 +9,9 @@ exports.initializeRoutes = app => {
 
     // Auth
     app.post('/login', (req, res, next) => {
-        authCtrl.login(req, res);
+        authenticationCtrl.login(req, res);
     });
 
-    app.post('/recoverPassword', (req, res, next) => {
-        authCtrl.recoverPassword(req, res);
-    });
-
-    app.post('/changePassword', token, (req, res, next) => {
-        authCtrl.changePassword(req, res);
-    });
 
 
     // User

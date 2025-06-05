@@ -3,67 +3,56 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const dbOps = require('../../config/db/operations');
-const appConfig = require('../../config/config');
+const operations = require('../../config/db/operations');
+const config = require('../../config/configuration');
 
-const { encodedRole } = require('../../helper/manage-role');
-const validateFields = require('../../helper/is-object');
+const { encoded } = require('../../helper/roles');
 
-class AuthSessionHandler {
+module.exports = class AuthSessionHandler {
 
-    async authenticate(request, response) {
+    async process(req, res) {
         try {
-            console.log('AuthSessionHandler - authenticate - Intentando login');
+            console.log('AuthSessionHandler - process - Inicio de sesión');
 
-            const credentials = {
-                username: request.body.user,
-                passwd: request.body.password
-            };
+            const { user, password } = req.body;
 
-            if (!credentials.username || !credentials.passwd) {
-                return response.status(400).json({ message: 'El usuario y contraseña son requeridos' });
+            if (!user || !password) {
+                return res.status(400).json({ message: 'El usuario y contraseña son requeridos' });
             }
 
-            credentials.username = credentials.username.trim();
-            credentials.passwd = credentials.passwd.trim();
+            const trimmedUser = user.trim();
+            const trimmedPassword = password.trim();
 
-            if (validateFields([credentials.username, credentials.passwd])) {
-                return response.status(400).json({ message: 'Usuario o contraseña incorrectos' });
-            }
-
-            const foundUser = await dbOps.findOne('users', { 'user': credentials.username });
+            const foundUser = await operations.findOne('users', { user: trimmedUser });
             if (!foundUser) {
-                return response.status(400).json({ message: 'Usuario o contraseña incorrectos' });
+                return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
             }
 
-            const isPasswordValid = await bcrypt.compare(credentials.passwd, foundUser.password);
+            const isPasswordValid = await bcrypt.compare(trimmedPassword, foundUser.password);
             if (!isPasswordValid) {
-                return response.status(400).json({ message: 'Usuario o contraseña incorrectos' });
+                return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
             }
 
-            const jwtPayload = {
+            const payload = {
                 user: foundUser.user,
                 name: foundUser.name,
                 email: foundUser.email,
-                azrq: encodedRole(foundUser.role)
+                oxcj: encoded(foundUser.role)
             };
-            console.log(jwtPayload);
 
-            const authToken = jwt.sign(jwtPayload, appConfig.JWT_SECRET, {
-                expiresIn: 3600 * 8 // 8 horas de sesión
+            const token = jwt.sign(payload, config.JWT_SECRET, {
+                expiresIn: 3600 * 8 // Sesión de 8hs
             });
 
-            return response.status(200).json({
+            return res.status(200).json({
                 message: 'Autenticación correcta',
-                token: authToken
+                token
             });
 
-        } catch (err) {
-            console.error('AuthSessionHandler - authenticate - Error durante login', err);
-            throw err;
+        } catch (error) {
+            console.error('AuthSessionHandler - process - Error en el inicio de sesión', error);
+            throw error;
         }
     }
 
 }
-
-module.exports = AuthSessionHandler;

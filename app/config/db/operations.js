@@ -1,111 +1,146 @@
 'use strict';
 
-let { getConnection } = require('./db');
 const db = require('./db');
 
-exports.findOne = async (collectionName, query, projection = {}) => {
+/**
+ * Helper to get collection instance
+ */
+const getCollection = async (collectionName) => {
+    const dbInstance = await db.getDatabaseConnection();
+    return dbInstance.collection(collectionName);
+};
+
+/**
+ * Find one document in a collection
+ */
+const findOne = async (collectionName, query, projection = {}) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
+        const collection = await getCollection(collectionName);
         return collection.findOne(query, { projection });
     } catch (error) {
-        console.error('Error al buscar en la colección:', error);
+        console.error('Error finding document in collection:', error);
         throw error;
     }
 };
 
-
-
-exports.findMany = async (collectionName, query, sort = {}, pagination = {}, projection = {}) => {
+/**
+ * Find many documents in a collection
+ */
+const findMany = async (collectionName, query, sort = {}, pagination = {}, projection = {}) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
+        const collection = await getCollection(collectionName);
         return collection.find(query, pagination)
             .project(projection)
             .sort(sort)
             .collation({ locale: "en_US", numericOrdering: true })
             .toArray();
     } catch (error) {
-        console.error('Error al buscar en la colección:', error);
+        console.error('Error finding documents in collection:', error);
         throw error;
     }
 };
 
-exports.countDocuments = async (collectionName, query) => {
+/**
+ * Count documents in a collection
+ */
+const countDocuments = async (collectionName, query) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
+        const collection = await getCollection(collectionName);
         return collection.countDocuments(query);
     } catch (error) {
-        console.error('Error al buscar el conteo en la colección:', error);
+        console.error('Error counting documents in collection:', error);
         throw error;
     }
 };
 
-exports.updateOne = async (collectionName, filter, update) => {
+/**
+ * Update one document in a collection
+ */
+const updateOne = async (collectionName, filter, update) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
+        const collection = await getCollection(collectionName);
         return collection.updateOne(filter, update);
     } catch (error) {
-        console.error('Error al actualizar en la colección:', error);
+        console.error('Error updating document in collection:', error);
         throw error;
     }
 };
 
-exports.updateMany = async (collectionName, filter, update) => {
+/**
+ * Update many documents in a collection
+ */
+const updateMany = async (collectionName, filter, update) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
+        const collection = await getCollection(collectionName);
         return collection.updateMany(filter, update);
     } catch (error) {
-        console.error('Error al actualizar en la colección:', error);
+        console.error('Error updating documents in collection:', error);
         throw error;
     }
 };
 
-exports.insertOne = async (collectionName, query) => {
+/**
+ * Insert one document into a collection
+ */
+const insertOne = async (collectionName, document) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
-        return collection.insertOne(query);
+        const collection = await getCollection(collectionName);
+        return collection.insertOne(document);
     } catch (error) {
-        console.error('Error al insertar en la colección:', error);
+        console.error('Error inserting document into collection:', error);
         throw error;
     }
 };
 
-exports.insertMany = async (collectionName, query) => {
+/**
+ * Insert many documents into a collection
+ */
+const insertMany = async (collectionName, documents) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
-        return collection.insertMany(query);
+        const collection = await getCollection(collectionName);
+        return collection.insertMany(documents);
     } catch (error) {
-        console.error('Error al insertar en la colección:', error);
+        console.error('Error inserting documents into collection:', error);
         throw error;
     }
 };
 
-exports.deleteOne = async (collectionName, query) => {
+/**
+ * Delete one document from a collection
+ */
+const deleteOne = async (collectionName, query) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
+        const collection = await getCollection(collectionName);
         return collection.deleteOne(query);
     } catch (error) {
-        console.error('Error al eliminar en la colección:', error);
+        console.error('Error deleting document from collection:', error);
         throw error;
     }
 };
 
-exports.deleteMany = async (collectionName, query) => {
+/**
+ * Delete many documents from a collection
+ */
+const deleteMany = async (collectionName, query) => {
     try {
-        const dbInstance = await db.getConnection();
-        const collection = dbInstance.collection(collectionName);
+        const collection = await getCollection(collectionName);
         return collection.deleteMany(query);
     } catch (error) {
-        console.error('Error al eliminar de la colección:', error);
+        console.error('Error deleting documents from collection:', error);
         throw error;
     }
+};
+
+module.exports = {
+    findOne,
+    findMany,
+    countDocuments,
+    updateOne,
+    updateMany,
+    insertOne,
+    insertMany,
+    deleteOne,
+    deleteMany
 };
 
 

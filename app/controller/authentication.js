@@ -1,22 +1,19 @@
 'use strict';
 
 const AuthSessionHandler = require('../services/auth/login');
-
-const authCtrl = {};
-
-authCtrl.login = async (req, res) => {
+const authenticationCtrl = {};
+authenticationCtrl.login = async (req, res) => {
 
     try {
-
         console.log('AuthSessionHandler');
 
         const authSessionHandler = new AuthSessionHandler();
-        await authSessionHandler.authenticate(req, res);
+        await authSessionHandler.process(req, res);
     } catch (ex) {
-
-        console.log('Exception authCtrl [login]: ', ex);
+        
+        console.log('AuthSessionHandler', ex);
         res.status(500).json({ error: 'Ha ocurrido un error' });
     }
 };
 
-module.exports = authCtrl; 
+module.exports = authenticationCtrl; 

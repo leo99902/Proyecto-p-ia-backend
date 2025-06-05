@@ -1,46 +1,52 @@
 'use strict';
- 
-const Express = require('express');
-const BodyParser = require('body-parser');
-const Cors = require('cors');
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
 const timeout = require('connect-timeout');
 const dotenv = require('dotenv');
 dotenv.config();
 
-const { openConnection, closeConnection } = require('./app/config/db/db');
-const router = require('./app/route/route');
+const { connectDatabase, disconnectDatabase } = require('./app/config/db/db');
+const router = require('./app/route/routes');
 
-const app = Express();
-const SERVER_PORT = 6060;
+const app = express();
+const SERVER_PORT = process.env.PORT || 6060;
 
-openConnection();
+// Database connection
+(async () => {
+    try {
+        await connectDatabase();
+        console.log('✅ Database connected');
+    } catch (error) {
+        console.error('❌ Failed to connect to database:', error);
+        process.exit(1);
+    }
+})();
 
-app.use(Cors());
-app.use(BodyParser.urlencoded({ extended: true, limit: '1mb' }));
-app.use(BodyParser.json({ limit: '1mb' }));
+// Middleware setup
+app.use(cors());
+app.use(bodyParser.urlencoded({ extended: true, limit: '1mb' }));
+app.use(bodyParser.json({ limit: '1mb' }));
 app.use(timeout('1000s'));
 
-app.listen(SERVER_PORT, () => {
-	console.log(`Server running on port ${SERVER_PORT}`);
-});
-
+// Routes
 router.initializeRoutes(app);
 
-console.log('pid', process.pid);
-
-/**
- * Manejo de eventos del S.O donde se maneja la caida de MS y se cierra la conexión abierta a MongoDB
- **/
-process.on('SIGTERM', async () => {
-	console.log('SIGTERM Se cierra proceso de node');
-	await closeConnection();
-	process.exit(0);
+// Server start
+app.listen(SERVER_PORT, () => {
+    console.log(`🚀 Server running on port ${SERVER_PORT}`);
+    console.log('pid', process.pid);
 });
 
-process.on('SIGINT', async () => {
-	console.log('SIGINT Se cierra proceso de node');
-	await closeConnection();
-	process.exit(0);
-});
+// Graceful shutdown
+const gracefulShutdown = async (signal) => {
+    console.log(`${signal} received: closing server and database connection`);
+    await disconnectDatabase();
+    process.exit(0);
+};
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
 
 module.exports = { app };
