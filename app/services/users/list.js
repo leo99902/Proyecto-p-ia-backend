@@ -68,9 +68,8 @@ module.exports = class ListService {
     }
 
     async getUsers(page, filter) {
-
         try {
-        const limit = 10;
+        const limit = 8;
         let skip = 0;
         let total_registros = 0;
         let total_paginas = 0;

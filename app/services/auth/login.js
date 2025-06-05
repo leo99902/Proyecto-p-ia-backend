@@ -44,7 +44,7 @@ module.exports = class LoginService {
             user: user.user,
             name: user.name,
             email: user.email,
-            role: encodedRole(user.role)
+            azrq: encodedRole(user.role)
         };
         console.log(payload);
         const token = jwt.sign(payload, config.JWT_SECRET, {
