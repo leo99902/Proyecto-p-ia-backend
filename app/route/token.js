@@ -20,6 +20,10 @@ tokenRouter.use((req, res, next) => {
             if (error)
                 return res.status(401).json({ error: 'Autenticación expirada' });
             else {
+                // Validar si el usuario está inactivo
+                if (datosDecodificados.state && datosDecodificados.state.toLowerCase() === 'inactivo') {
+                    return res.status(403).json({ error: 'Usuario inactivo' });
+                }
 
                 if (validarRol(datosDecodificados.oxcj)) {
                     req.decoded = datosDecodificados;

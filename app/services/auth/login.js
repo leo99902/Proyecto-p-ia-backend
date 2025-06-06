@@ -28,6 +28,11 @@ module.exports = class AuthSessionHandler {
                 return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
             }
 
+            // Verificar si el usuario está inactivo
+            if (foundUser.state && foundUser.state.toLowerCase() === 'inactivo') {
+                return res.status(403).json({ message: 'Usuario inactivo' });
+            }
+
             const isPasswordValid = await bcrypt.compare(trimmedPassword, foundUser.password);
             if (!isPasswordValid) {
                 return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
@@ -37,7 +42,8 @@ module.exports = class AuthSessionHandler {
                 user: foundUser.user,
                 name: foundUser.name,
                 email: foundUser.email,
-                oxcj: encoded(foundUser.role)
+                oxcj: encoded(foundUser.role),
+                state: foundUser.state // Se agrega el estado al token
             };
 
             const token = jwt.sign(payload, config.JWT_SECRET, {
