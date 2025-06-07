@@ -12,6 +12,8 @@ module.exports = class ListService {
 
         const entry = {
             user: req.body.user,
+            role: req.body.role,      // Nuevo campo
+            cedula: req.body.cedula, // Nuevo campo
             state: req.body.state,
             page: req.body.page
         };
@@ -35,7 +37,7 @@ module.exports = class ListService {
 
     buildFilter(entry) {
 
-        try{  
+        try {  
 
         let filter = {};
 
@@ -43,13 +45,22 @@ module.exports = class ListService {
             const partialUsernameRegex = new RegExp(entry.user, 'i');
             filter["user"] = partialUsernameRegex;
         }
+        
+        if (entry.cedula) {
+            const partialCedulaRegex = new RegExp(entry.cedula, 'i');
+            filter["cedula"] = partialCedulaRegex;
+        }
+
+        if (entry.role) {
+            filter["role"] = entry.role;
+        }
 
         if (entry.state)
             filter["state"] = entry.state;
 
         return filter;
 
-        }catch(error) {
+        } catch(error) {
 
             console.error('ListService - buildFilter - Error al construir el filtro', error);
             throw error;
@@ -57,9 +68,8 @@ module.exports = class ListService {
     }
 
     async getUsers(page, filter) {
-
         try {
-        const limit = 10;
+        const limit = 8;
         let skip = 0;
         let total_registros = 0;
         let total_paginas = 0;

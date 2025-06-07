@@ -1,94 +1,92 @@
 'use strict';
 
 const { MongoClient } = require('mongodb');
-const config = require('../config');
+const config = require('../configuration');
 
-let client = null;
-let db = null;
+let mongoClient = null;
+let database = null;
 
 const CLUSTER_URI = process.env.CLUSTER_URI || 'mongodb://localhost:27017';
 
-/**
- * openConnection
- * Crea la conexión de la base de datos
- **/
-const openConnection = async () => {
+// connectDatabase: Creates the database connection
+
+const connectDatabase = async () => {
     try {
 
-        if (db)
+        if (database)
             return;
 
-        const OPTIONS = {
+        const mongoOptions = {
             retryWrites: true,
             maxPoolSize: 40,
             maxIdleTimeMS: 300000,
             socketTimeoutMS: 30000
         };
 
-        client = new MongoClient(CLUSTER_URI, OPTIONS);
-        await client.connect();
+        mongoClient = new MongoClient(CLUSTER_URI, mongoOptions);
+        await mongoClient.connect();
 
-        db = client.db(config.db);
-        console.log('Conexión a MongoDB establecida');
+        database = mongoClient.db(config.db);
+        console.log('✅ MongoDB connection established successfully');
 
-        client.on('close', function (reason) {
-            console.log(" --------->  Conexion MongoDB cerrada - ", reason);
+        mongoClient.on('close', function (closeReason) {
+            console.log("🔌 MongoDB connection closed - ", closeReason);
         });
 
-        client.on('error', function (error) {
-            console.log(" ---------> Conexion MongoDB con error: ", error);
+        mongoClient.on('error', function (connectionError) {
+            console.log("❌ Error in MongoDB connection: ", connectionError);
         });
 
-        client.on('reconnect', function (info) {
-            console.log(" ---------> Conexion MongoDB reconectada y reautenticada - ", info);
+        mongoClient.on('reconnect', function (reconnectInfo) {
+            console.log("🔄 MongoDB connection reconnected and reauthenticated - ", reconnectInfo);
         });
 
-        client.on('timeout', function (error) {
-            console.log(" ---------> Conexion MongoDB timeout: ", error);
+        mongoClient.on('timeout', function (timeoutError) {
+            console.log("⏰ Timeout in MongoDB connection: ", timeoutError);
         });
 
-    } catch (error) {
-        console.error('Error al conectar a MongoDB: ', error);
-        throw error;
+    } catch (connectionError) {
+        console.error('❌ Error connecting to MongoDB: ', connectionError);
+        throw connectionError;
     }
 };
 
-/**
- * closeConnection
- * Cierra la conexión de la base de datos
- **/
-const closeConnection = async () => {
+// disconnectDatabase: Closes the database connection
+
+const disconnectDatabase = async () => {
     try {
 
-        if (db) {
+        if (database) {
 
-            await client.close();
+            await mongoClient.close();
 
-            client = null;
-            db = null;
+            mongoClient = null;
+            database = null;
 
-            console.log('Conexión a MongoDB cerrada');
+            console.log('🔌 MongoDB connection closed successfully');
         }
 
-    } catch (error) {
-        console.error('Error al cerrar la conexión a MongoDB: ', error);
-        throw error;
+    } catch (closeError) {
+        console.error('❌ Error closing MongoDB connection: ', closeError);
+        throw closeError;
     }
 };
 
-/**
- * getConnection
- * Devuelve la instancia de la conexión a la base de datos
- **/
-const getConnection = async () => {
+// getDatabaseConnection: Returns the database connection instance
 
-    if (!db) {
+const getDatabaseConnection = async () => {
 
-        console.error('No existe una conexión activa');
-        await openConnection();
+    if (!database) {
+
+        console.error('⚠️ No active connection exists');
+        await connectDatabase();
     }
 
-    return db;
+    return database;
 };
 
-module.exports = { openConnection, closeConnection, getConnection };
+module.exports = { 
+    connectDatabase, 
+    disconnectDatabase, 
+    getDatabaseConnection 
+};
