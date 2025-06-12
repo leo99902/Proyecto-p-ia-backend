@@ -3,10 +3,12 @@
 module.exports = {
     encoded: (role) => {
         if (role === 'Administrador') return 'admin';
-        if (role === 'Usuario') return 'user';
+        if (role === 'Paciente') return 'patient';
+        if (role === 'Secretario') return 'secretary';
     },
     decoded: (role) => {
         if (role === 'admin') return 'Administrador';
-        if (role === 'user') return 'Usuario';
+        if (role === 'patient') return 'Paciente';
+        if (role === 'secretary') return 'Secretaria';
     }
 };
