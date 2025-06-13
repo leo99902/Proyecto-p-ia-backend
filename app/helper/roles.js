@@ -9,6 +9,6 @@ module.exports = {
     decoded: (role) => {
         if (role === 'admin') return 'Administrador';
         if (role === 'patient') return 'Paciente';
-        if (role === 'secretary') return 'Secretaria';
+        if (role === 'secretary') return 'Secretario';
     }
 };

@@ -39,7 +39,8 @@ module.exports = class AuthSessionHandler {
             }
 
             const menuRoles = await this.getMenu(encoded(foundUser.role));
-            const menu = (menuRoles && menuRoles.length > 0) ? menuRoles[0].permits : [];
+            console.log(menuRoles)
+            const menu = (menuRoles && menuRoles.length > 0) ? menuRoles[0].menu : [];
 
             const payload = {
                 user: foundUser.user,

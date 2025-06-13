@@ -1,78 +1,61 @@
 'use strict';
 
 const operations = require('../../config/db/operations');
-const { ALLOWED_USER_ROLES } = require('./const/users');
 
 module.exports = class ListService {
 
     async process(req, res) {
-
         try {
-
-            console.log('ListService - process - Listado de usuarios');
+            console.log('ListService - process - Listado de pacientes');
 
             const entry = {
-                user: req.body.user,
-                role: req.body.role,
+                name: req.body.name,
                 cedula: req.body.cedula,
                 state: req.body.state,
-                page: req.body.page
+                page: req.body.page || 1
             };
 
             const filter = this.buildFilter(entry);
 
-            let { total_registros, total_paginas, users } = await this.getUsers(entry.page, filter);
+            let { total_registros, total_paginas, patients } = await this.getPatients(entry.page, filter);
 
             return res.status(200).json({
-                value: users,
+                value: patients,
                 total_registros,
                 total_paginas
             });
 
         } catch (error) {
-
-            console.error('ListService - process - Error en el listado de usuarios', error);
+            console.error('ListService - process - Error al listar pacientes', error);
             throw error;
         }
     }
 
     buildFilter(entry) {
-
         try {
-
             let filter = {};
 
-            if (entry.user) {
-                const partialUsernameRegex = new RegExp(entry.user, 'i');
-                filter["user"] = partialUsernameRegex;
-            }
+            filter["role"] = { $in: ["Paciente"] };
 
+            if (entry.name) {
+                filter["name"] = new RegExp(entry.name, 'i');
+            }
             if (entry.cedula) {
-                const partialCedulaRegex = new RegExp(entry.cedula, 'i');
-                filter["cedula"] = partialCedulaRegex;
-            }
-
-            // Solo permite roles permitidos
-            filter["role"] = { $in: ALLOWED_USER_ROLES };
-
-            if (entry.role && ALLOWED_USER_ROLES.includes(entry.role)) {
-                filter["role"] = entry.role;
+                filter["cedula"] = new RegExp(entry.cedula, 'i');
             }
 
             if (entry.state) {
                 filter["state"] = entry.state;
             }
-            
+
             return filter;
-
         } catch (error) {
-
             console.error('ListService - buildFilter - Error al construir el filtro', error);
             throw error;
         }
     }
 
-    async getUsers(page, filter) {
+    async getPatients(page, filter) {
         try {
             const limit = 8;
             let skip = 0;
@@ -86,17 +69,16 @@ module.exports = class ListService {
 
             total_registros = value;
             total_paginas = Math.ceil(total_registros / limit);
-            const users = await operations.findMany('users', filter, {}, { limit, skip });
+            const patients = await operations.findMany('users', filter, {}, { limit, skip });
 
             return {
                 total_registros,
                 total_paginas,
-                users
+                patients
             }
 
         } catch (error) {
-
-            console.error('ListService - getUsers - Error al obtener los usuarios', error);
+            console.error('ListService - getPatients - Error al obtener los pacientes', error);
             throw error;
         }
     }
