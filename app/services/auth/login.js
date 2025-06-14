@@ -38,16 +38,21 @@ module.exports = class AuthSessionHandler {
                 return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
             }
 
+            const menuRoles = await this.getMenu(encoded(foundUser.role));
+            console.log(menuRoles)
+            const menu = (menuRoles && menuRoles.length > 0) ? menuRoles[0].menu : [];
+
             const payload = {
                 user: foundUser.user,
                 name: foundUser.name,
                 email: foundUser.email,
                 oxcj: encoded(foundUser.role),
-                state: foundUser.state // Se agrega el estado al token
+                state: foundUser.state,
+                menu
             };
 
             const token = jwt.sign(payload, config.JWT_SECRET, {
-                expiresIn: 3600 * 8 // Sesión de 8hs
+                expiresIn: 3600 * 10 // Sesión de 10hs
             });
 
             return res.status(200).json({
@@ -59,6 +64,10 @@ module.exports = class AuthSessionHandler {
             console.error('AuthSessionHandler - process - Error en el inicio de sesión', error);
             throw error;
         }
+    }
+
+    async getMenu(role) {
+        return await operations.findMany('roles', { role });
     }
 
 }

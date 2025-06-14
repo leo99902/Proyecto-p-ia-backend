@@ -1,57 +1,55 @@
 'use strict';
 
-const CreateService = require('../services/users/create');
-const ListService = require('../services/users/list');
-const GetService = require('../services/users/get');
-const EditService = require('../services/users/edit');
+const CreateService = require('../services/patients/create');
+const ListService = require('../services/patients/list');
+const GetService = require('../services/patients/get');
+const EditService = require('../services/patients/edit');
 
+const patientsCtrl = {
 
-const usersCtrl = {
-
-    // create users
+    // Create patients
     create: async (req, res) => {
         try {
-
-            console.log('usersCtrl => create ');
+            console.log('patientsCtrl => create');
             await new CreateService().process(req, res);
         } catch (ex) {
-            console.log('usersCtrl => create exception:', ex);
+            console.log('patientsCtrl => create exception:', ex);
             res.status(500).json({ error: 'Ocurrio un error' });
         }
     },
 
-    // get users
+    // get patients
     get: async (req, res) => {
         try {
-            console.log('usersCtrl => get');
+            console.log('patientsCtrl => get');
             await new GetService().process(req, res);
         } catch (ex) {
-            console.log('usersCtrl => get exception:', ex);
+            console.log('patientsCtrl => get exception:', ex);
             res.status(500).json({ error: 'Ocurrio un error' });
         }
     },
 
-    // edit users
+    // edit patients
     edit: async (req, res) => {
         try {
-            console.log('usersCtrl => edit');
+            console.log('patientsCtrl => edit');
             await new EditService().process(req, res);
         } catch (ex) {
-            console.log('usersCtrl => edit exception:', ex);
+            console.log('patientsCtrl => edit exception:', ex);
             res.status(500).json({ error: 'Ocurrio un error' });
         }
     },
 
-    // list users
+    // list patients
     list: async (req, res) => {
         try {
-            console.log('usersCtrl => list');
+            console.log('patientsCtrl => list');
             await new ListService().process(req, res);
         } catch (ex) {
-            console.log('usersCtrl => list exception: ', ex);
+            console.log('patientsCtrl => list exception:', ex);
             res.status(500).json({ error: 'Ocurrio un error' });
         }
     }
 };
 
-module.exports = usersCtrl;
+module.exports = patientsCtrl;

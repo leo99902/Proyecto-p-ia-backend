@@ -2,37 +2,48 @@
 
 const authenticationCtrl = require('../controller/authentication');
 const usersCtrl = require('../controller/users');
+const patientsCtrl = require('../controller/patients');
 
 const { token } = require('./token');
 
 exports.initializeRoutes = app => {
 
     // Auth
-    app.post('/login', (req, res, next) => {
+    app.post('/login', (req, res) => {
         authenticationCtrl.login(req, res);
     });
 
-
-
     // User
-    app.post('/createUser', token, (req, res, next) => {
+    app.post('/createUser', token, (req, res) => {
         usersCtrl.create(req, res);
     });
 
-    app.post('/getUser', token, (req, res, next) => {
+    app.post('/getUser', token, (req, res) => {
         usersCtrl.get(req, res);
     });
 
-    app.post('/editUser', token, (req, res, next) => {
+    app.post('/editUser', token, (req, res) => {
         usersCtrl.edit(req, res);
     });
 
-    app.post('/listUsers', token, (req, res, next) => {
+    app.post('/listUsers', token, (req, res) => {
         usersCtrl.list(req, res);
     });
 
-    app.post('/deleteUser', token, (req, res, next) => {
-        usersCtrl.delete(req, res);
+    // Patients
+    app.post('/createPatient', token, (req, res) => {
+        patientsCtrl.create(req, res);
     });
 
+    app.post('/getPatient', token, (req, res) => {
+        patientsCtrl.get(req, res);
+    });
+
+    app.post('/editPatient', token, (req, res) => {
+        patientsCtrl.edit(req, res);
+    });
+
+    app.post('/listPatients', token, (req, res) => {
+        patientsCtrl.list(req, res);
+    });
 }
