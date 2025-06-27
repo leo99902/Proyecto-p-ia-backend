@@ -15,7 +15,7 @@ const authenticationController = {
         }
     },
 
-    // Password Reset (forgot password)
+    // Password Reset 
     passwordReset: async (req, res) => {
         try {
             console.log('PasswordResetService => recoverPassword');
@@ -26,7 +26,7 @@ const authenticationController = {
         }
     },
 
-    // Renew Password (change password)
+    // Renew Password 
     renewPassword: async (req, res) => {
         try {
             console.log('RenewPasswordService => renewPassword');

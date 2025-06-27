@@ -23,7 +23,7 @@ module.exports = class CreateService {
                 state: req.body.state
             };
 
-            // Validaciones básicas
+          
             if (!entry.name)
                 return res.status(400).json({ message: 'El nombre es requerido' });
 
