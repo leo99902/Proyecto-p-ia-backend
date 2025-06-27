@@ -1,4 +1,3 @@
-'use strict';
 
 const CreateService = require('../services/users/create');
 const ListService = require('../services/users/list');

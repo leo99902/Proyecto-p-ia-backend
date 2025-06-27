@@ -1,4 +1,3 @@
-'use strict';
 
 const bcrypt = require('bcrypt');
 const operations = require('../../config/db/operations');

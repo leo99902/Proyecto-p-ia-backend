@@ -1,4 +1,3 @@
-'use strict';
 
 const { decoded } = require('../helper/roles');
 

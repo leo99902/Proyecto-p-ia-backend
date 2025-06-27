@@ -1,4 +1,3 @@
-'use strict';
 
 const operations = require('../../config/db/operations');
 const { ALLOWED_USER_ROLES } = require('./const/users');

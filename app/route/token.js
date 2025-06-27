@@ -1,4 +1,3 @@
-'use strict';
 
 const jsonwebtoken = require('jsonwebtoken');
 const express = require('express');
