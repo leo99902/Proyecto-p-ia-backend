@@ -1,4 +1,3 @@
-'use strict';
 
 const { ObjectId } = require('mongodb');
 const operations = require('../../config/db/operations');
@@ -17,7 +16,6 @@ module.exports = class GetService {
             if (!user)
                 return res.status(404).json({ message: 'Usuario no encontrado' });
 
-            // Solo permite roles permitidos
             if (!ALLOWED_USER_ROLES.includes(user.role)) {
                 return res.status(403).json({ message: 'No autorizado para ver este usuario' });
             }

@@ -1,4 +1,3 @@
-'use strict';
 
 const operations = require('../../config/db/operations');
 

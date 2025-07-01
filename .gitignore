@@ -41,11 +41,4 @@ testem.log
 # System Files
 .DS_Store
 Thumbs.db
-
-saggee-ms-simulacion-f41372571df7.json
-
 package-lock.json
-
-app.yaml
-
-app/config/cloud/itau-judicial-backend-d70c004e830b.json

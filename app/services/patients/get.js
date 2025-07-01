@@ -1,4 +1,3 @@
-'use strict';
 
 const { ObjectId } = require('mongodb');
 const operations = require('../../config/db/operations');

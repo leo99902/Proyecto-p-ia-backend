@@ -1,4 +1,3 @@
-'use strict';
 
 const bcrypt = require('bcrypt');
 const operations = require('../../config/db/operations');
@@ -65,7 +64,6 @@ module.exports = class CreateService {
             if (userWithUsername)
                 return res.status(400).json({ message: 'El usuario ya existe' });
 
-            // Usa la constante exportada para validar el rol
             if (!ALLOWED_USER_ROLES.includes(entry.role)) {
                 return res.status(400).json({ message: 'Solo se permite registrar Administrador o Secretario' });
             }

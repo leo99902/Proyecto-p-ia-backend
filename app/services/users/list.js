@@ -1,4 +1,3 @@
-'use strict';
 
 const operations = require('../../config/db/operations');
 const { ALLOWED_USER_ROLES } = require('./const/users');
@@ -52,7 +51,6 @@ module.exports = class ListService {
                 filter["cedula"] = partialCedulaRegex;
             }
 
-            // Solo permite roles permitidos
             filter["role"] = { $in: ALLOWED_USER_ROLES };
 
             if (entry.role && ALLOWED_USER_ROLES.includes(entry.role)) {

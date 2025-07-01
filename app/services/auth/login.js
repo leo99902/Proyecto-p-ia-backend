@@ -1,4 +1,3 @@
-'use strict';
 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
@@ -28,7 +27,6 @@ module.exports = class AuthSessionHandler {
                 return res.status(400).json({ message: 'Usuario o contraseña incorrectos' });
             }
 
-            // Verificar si el usuario está inactivo
             if (foundUser.state && foundUser.state.toLowerCase() === 'inactivo') {
                 return res.status(403).json({ message: 'Usuario inactivo' });
             }
@@ -39,7 +37,6 @@ module.exports = class AuthSessionHandler {
             }
 
             const menuRoles = await this.getMenu(encoded(foundUser.role));
-            console.log(menuRoles)
             const menu = (menuRoles && menuRoles.length > 0) ? menuRoles[0].menu : [];
 
             const payload = {

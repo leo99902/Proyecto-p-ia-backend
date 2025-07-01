@@ -1,4 +1,3 @@
-'use strict';
 
 const { ObjectId } = require('mongodb');
 const bcrypt = require('bcrypt');
@@ -62,7 +61,6 @@ module.exports = class EditService {
 
 
 
-            // Validar unicidad de cédula y email si cambiaron
             if (cedula !== existingPatient.cedula) {
                 const patientWithCedula = await operations.findOne('users', { cedula });
                 if (patientWithCedula)
@@ -75,7 +73,6 @@ module.exports = class EditService {
                     return res.status(400).json({ message: 'El email ya existe' });
             }
 
-            // Validar contraseña segura
             const regEx = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>\/?]).{8,}$/;
             if (!regEx.test(password))
                 return res.status(400).json({ message: 'La contraseña debe tener al menos 8 caracteres, 1 dígito, 1 caracter en mayúscula y un caracter especial' });
