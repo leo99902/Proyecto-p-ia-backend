@@ -1,11 +1,20 @@
-
 const { MongoClient } = require('mongodb');
 const config = require('../configuration');
 
 let mongoClient = null;
 let database = null;
 
-const CLUSTER_URI = process.env.CLUSTER_URI || 'mongodb://localhost:27017';
+const CLUSTER_URI = process.env.CLUSTER_URI || 'mongodb://localhost:27017/'
+
+if (!process.env.CLUSTER_URI) {
+
+    console.log("🖥️ Connecting to the local database");
+} else {
+    
+    console.log("☁️ Connecting to the production database");
+}
+
+console.log(CLUSTER_URI)
 
 // connectDatabase: Creates the database connection
 
