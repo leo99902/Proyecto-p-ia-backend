@@ -69,7 +69,7 @@ module.exports = class CreateService {
             const hashedPassword = await bcrypt.hash(entry.password, 10);
 
             const newPatient = {
-                name: entry.name,
+                user: entry.name,
                 cedula: entry.cedula,
                 age: entry.age,
                 address: entry.address,
