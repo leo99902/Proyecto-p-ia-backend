@@ -19,8 +19,7 @@ module.exports = class CreateService {
                 occupation: req.body.occupation,
                 phone: req.body.phone,
                 disease: req.body.disease,
-                infoDisease: req.body.infoDisease,
-                state: req.body.state
+                infoDisease: req.body.infoDisease
             };
 
           
