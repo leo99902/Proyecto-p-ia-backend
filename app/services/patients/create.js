@@ -20,7 +20,7 @@ module.exports = class CreateService {
                 phone: req.body.phone,
                 disease: req.body.disease,
                 infoDisease: req.body.infoDisease,
-                state: req.body.state
+                state: true
             };
 
           
@@ -52,8 +52,6 @@ module.exports = class CreateService {
             if (!entry.disease)
                 return res.status(400).json({ message: 'La enfermedad es requerida' });
             
-            if (!entry.state)
-                return res.status(400).json({ message: 'El estado es requerido' });
 
             // Validar unicidad de cédula y email
             const patientWithCedula = await operations.findOne('users', { 'cedula': entry.cedula });

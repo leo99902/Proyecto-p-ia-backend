@@ -14,8 +14,6 @@ if (!process.env.CLUSTER_URI) {
     console.log("☁️ Connecting to the production database");
 }
 
-console.log(CLUSTER_URI)
-
 // connectDatabase: Creates the database connection
 
 const connectDatabase = async () => {

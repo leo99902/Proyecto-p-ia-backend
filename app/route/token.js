@@ -12,7 +12,13 @@ tokenRouter.use((req, res, next) => {
 
     if (authHeader) {
 
-        jsonwebtoken.verify(authHeader, config.JWT_SECRET, (error, datosDecodificados) => {
+        let token = authHeader;
+        // Si el encabezado contiene "Bearer ", extraemos solo el token
+        if (authHeader.startsWith('Bearer ')) {
+            token = authHeader.split(' ')[1];
+        }
+
+        jsonwebtoken.verify(token, config.JWT_SECRET, (error, datosDecodificados) => {
 
             console.log(datosDecodificados);
 
