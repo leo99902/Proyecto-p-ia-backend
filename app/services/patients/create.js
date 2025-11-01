@@ -19,8 +19,12 @@ module.exports = class CreateService {
                 occupation: req.body.occupation,
                 phone: req.body.phone,
                 disease: req.body.disease,
+<<<<<<< HEAD
                 infoDisease: req.body.infoDisease,
                 state: true
+=======
+                infoDisease: req.body.infoDisease
+>>>>>>> 7a48b8205a75e21e85bad602f86b6424609a03c0
             };
 
           
@@ -81,7 +85,6 @@ module.exports = class CreateService {
                 disease: entry.disease,
                 infoDisease: entry.infoDisease,
                 role:"Paciente",
-                state: entry.state
             };
 
             await operations.insertOne('users', newPatient);
