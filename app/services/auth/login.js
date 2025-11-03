@@ -40,6 +40,7 @@ module.exports = class AuthSessionHandler {
             const menu = (menuRoles && menuRoles.length > 0) ? menuRoles[0].menu : [];
 
             const payload = {
+                id: foundUser._id,
                 user: foundUser.user,
                 name: foundUser.name,
                 email: foundUser.email,

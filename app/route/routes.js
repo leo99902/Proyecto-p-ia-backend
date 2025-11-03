@@ -2,6 +2,8 @@
 const authenticationCtrl = require('../controller/authentication');
 const usersCtrl = require('../controller/users');
 const patientsCtrl = require('../controller/patients');
+const notesCtrl = require('../controller/notes');
+const geminiCtrl = require('./gemini');
 
 const { token } = require('./token');
 
@@ -51,5 +53,27 @@ exports.initializeRoutes = app => {
 
     app.post('/listPatients', token, (req, res) => {
         patientsCtrl.list(req, res);
+    });
+
+    // Notes
+    app.post('/createNote', token, (req, res) => {
+        notesCtrl.create(req, res);
+    });
+
+    app.post('/listNotes', token, (req, res) => {
+        notesCtrl.list(req, res);
+    });
+
+    app.post('/deleteNote', token, (req, res) => {
+        notesCtrl.delete(req, res);
+    });
+
+    // Gemini
+    app.post('/gemini/generate', (req, res) => {
+        geminiCtrl.generate(req, res);
+    });
+
+    app.post('/gemini/history', (req, res) => {
+        geminiCtrl.history(req, res);
     });
 }
