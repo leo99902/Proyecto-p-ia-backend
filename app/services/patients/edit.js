@@ -53,9 +53,6 @@ module.exports = class EditService {
             if (!phone)
                 return res.status(400).json({ message: 'El teléfono es requerido' });
 
-            if (!disease)
-                return res.status(400).json({ message: 'La enfermedad es requerida' });
-
             if (!state)
                 return res.status(400).json({ message: 'El estado es requerido' });
 

@@ -49,8 +49,7 @@ module.exports = class CreateService {
             if (!entry.phone)
                 return res.status(400).json({ message: 'El teléfono es requerido' });
             
-            if (!entry.disease)
-                return res.status(400).json({ message: 'La enfermedad es requerida' });
+          
             
 
             // Validar unicidad de cédula y email
