@@ -10,7 +10,7 @@ module.exports = class CreateService {
             console.log('CreateService - process - Creación de paciente');
 
             let entry = {
-                name: req.body.name,
+                user: req.body.name,
                 cedula: req.body.cedula,
                 age: req.body.age,
                 address: req.body.address,
@@ -20,11 +20,11 @@ module.exports = class CreateService {
                 phone: req.body.phone,
                 disease: req.body.disease,
                 infoDisease: req.body.infoDisease,
-                state: true
+                state: "activo"
             };
 
           
-            if (!entry.name)
+            if (!entry.user)
                 return res.status(400).json({ message: 'El nombre es requerido' });
 
             if (!entry.cedula)
@@ -70,7 +70,7 @@ module.exports = class CreateService {
             const hashedPassword = await bcrypt.hash(entry.password, 10);
 
             const newPatient = {
-                user: entry.name,
+                user: entry.user,
                 cedula: entry.cedula,
                 age: entry.age,
                 address: entry.address,
@@ -82,7 +82,8 @@ module.exports = class CreateService {
                 infoDisease: entry.infoDisease,
                 role:"Paciente",
             };
-
+            
+            console.log(newPatient)
             await operations.insertOne('users', newPatient);
 
             return res.status(200).json({ message: 'Paciente creado exitosamente' });
