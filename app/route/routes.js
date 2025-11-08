@@ -64,6 +64,10 @@ exports.initializeRoutes = app => {
         notesCtrl.list(req, res);
     });
 
+    app.post('/listAllNotes', token, (req, res) => {
+        notesCtrl.listAll(req, res);
+    });
+
     app.post('/deleteNote', token, (req, res) => {
         notesCtrl.delete(req, res);
     });

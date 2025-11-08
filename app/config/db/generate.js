@@ -30,7 +30,7 @@ module.exports = class GenerateService {
             Tu propósito es hablar con los pacientes y escucharlos. No debes desviarte del tema de la psicología. 
             Sé empático y comprensivo en tus respuestas. Si sientes que la situación se te sale de las manos o que el paciente necesita ayuda
              urgente o que el paciente tenga indices de suicido , 
-             debes proporcionarle el siguiente número de contacto de un psicóloga Maria : 1110023409234.`;
+             debes proporcionarle el siguiente número de contacto de un psicólogo Genesis Moreno: 0412-7168176`;
 
             let userContext = "";
             if (user) {
