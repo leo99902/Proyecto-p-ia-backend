@@ -25,8 +25,7 @@ module.exports = class EditService {
                 occupation,
                 phone,
                 disease,
-                infoDisease,
-                state,
+                infoDisease
             } = req.body.patient;
 
             if (!name)
@@ -52,6 +51,9 @@ module.exports = class EditService {
 
             if (!phone)
                 return res.status(400).json({ message: 'El teléfono es requerido' });
+
+            if (!disease)
+                return res.status(400).json({ message: 'La enfermedad es requerida' });
 
             if (!state)
                 return res.status(400).json({ message: 'El estado es requerido' });
@@ -80,7 +82,7 @@ module.exports = class EditService {
 
             const updatedPatient = {
                 $set: {
-                    name,
+                    user:name,
                     cedula,
                     age,
                     address,
@@ -90,7 +92,7 @@ module.exports = class EditService {
                     phone,
                     disease,
                     infoDisease,
-                    state
+                    
                 }
             };
 
