@@ -40,6 +40,20 @@ const findMany = async (collectionName, query, sort = {}, pagination = {}, proje
 };
 
 /**
+ * Count documents in a collection.
+ * Note: This is an alias for countDocuments for compatibility.
+ */
+const count = async (collectionName, query) => {
+    try {
+        const collection = await getCollection(collectionName);
+        return collection.countDocuments(query);
+    } catch (error) {
+        console.error('Error counting documents in collection:', error);
+        throw error;
+    }
+};
+
+/**
  * Count documents in a collection
  */
 const countDocuments = async (collectionName, query) => {
@@ -133,6 +147,7 @@ const deleteMany = async (collectionName, query) => {
 module.exports = {
     findOne,
     findMany,
+    count,
     countDocuments,
     updateOne,
     updateMany,
@@ -141,10 +156,3 @@ module.exports = {
     deleteOne,
     deleteMany
 };
-
-
-
-
-
-
-

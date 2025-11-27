@@ -7,10 +7,16 @@ module.exports = class ListNotesService {
             console.log('ListNotesService - process - Listando notas por usuario');
 
             const user = req.decoded.user; // Obtener el usuario del token decodificado
+            const { noteList, idPatient } = req.body;
 
             const filter = {
-                createdBy: user
+                createdBy: user,
+                listType: noteList || false
             };
+ 
+            if (noteList === true) {
+                filter.idPatient = idPatient;
+            }
 
             // Buscar notas ordenadas por fecha de creación descendente
             const notes = await operations.findMany('notes', filter, { createdAt: -1 });

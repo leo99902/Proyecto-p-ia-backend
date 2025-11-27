@@ -51,7 +51,7 @@ module.exports = class EditService {
             if (email !== existingUser.email) {
                 const userWithEmail = await operations.findOne('users', { email });
                 if (userWithEmail)
-                    return res.status(400).json({ message: 'El email ya existe' });
+                    return res.status(400).json({ message: 'El email ya existe en el sistema' });
             }
 
             if (user !== existingUser.user) {
@@ -63,7 +63,7 @@ module.exports = class EditService {
             if (cedula !== existingUser.cedula) {
                 const userWithCedula = await operations.findOne('users', { cedula });
                 if (userWithCedula)
-                    return res.status(400).json({ message: 'La cedula ya existe' });
+                    return res.status(400).json({ message: 'La cedula ya existe en el sistema' });
             }
 
             let hashedPassword = existingUser.password;

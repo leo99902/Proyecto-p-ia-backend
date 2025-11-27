@@ -11,6 +11,8 @@ module.exports = class GetService {
 
             const idPatient = req.body._id;
 
+            console.log(req.body)
+
             if (!idPatient) {
                 return res.status(400).json({ message: 'El ID del paciente es requerido' });
             }
@@ -23,6 +25,8 @@ module.exports = class GetService {
 
             if (!patient)
                 return res.status(404).json({ message: 'Paciente no encontrado' });
+
+            console.log(patient)
 
             return res.status(200).json(patient);
 

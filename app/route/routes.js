@@ -3,7 +3,7 @@ const authenticationCtrl = require('../controller/authentication');
 const usersCtrl = require('../controller/users');
 const patientsCtrl = require('../controller/patients');
 const notesCtrl = require('../controller/notes');
-const geminiCtrl = require('./gemini');
+const geminiCtrl = require('../controller/gemini');
 
 const { token } = require('./token');
 
@@ -73,8 +73,12 @@ exports.initializeRoutes = app => {
     });
 
     // Gemini
-    app.post('/gemini/generate', (req, res) => {
+    app.post('/gemini/generate',token, (req, res) => {
         geminiCtrl.generate(req, res);
+    });
+
+     app.post('/gemini/number/promts',token, (req, res) => {
+        geminiCtrl.get(req, res);
     });
 
     app.post('/gemini/history', (req, res) => {

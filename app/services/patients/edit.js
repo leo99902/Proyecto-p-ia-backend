@@ -16,26 +16,27 @@ module.exports = class EditService {
                 return res.status(404).json({ message: 'Paciente no encontrado' });
 
             const {
-                name,
+                user,
                 cedula,
-                age,
+                birthDate,
                 address,
                 password,
                 email,
                 occupation,
                 phone,
                 disease,
-                infoDisease
+                infoDisease,
+                state
             } = req.body.patient;
 
-            if (!name)
+            if (!user)
                 return res.status(400).json({ message: 'El nombre es requerido' });
 
             if (!cedula)
                 return res.status(400).json({ message: 'La cédula es requerida' });
 
-            if (!age)
-                return res.status(400).json({ message: 'La edad es requerida' });
+            if (!birthDate)
+                return res.status(400).json({ message: 'La fecha de nacimiento es requerida' });
 
             if (!address)
                 return res.status(400).json({ message: 'La dirección es requerida' });
@@ -52,12 +53,14 @@ module.exports = class EditService {
             if (!phone)
                 return res.status(400).json({ message: 'El teléfono es requerido' });
 
-            if (!disease)
-                return res.status(400).json({ message: 'La enfermedad es requerida' });
-
+         
             if (!state)
                 return res.status(400).json({ message: 'El estado es requerido' });
 
+
+            const patientWithName = await operations.findOne('users', { 'user': user });
+                if (patientWithName)
+                return res.status(400).json({ message: 'El nombre no puede ser igual ya que es el nombre con el cual van iniciar sesión' });
 
 
             if (cedula !== existingPatient.cedula) {
@@ -69,7 +72,7 @@ module.exports = class EditService {
             if (email !== existingPatient.email) {
                 const patientWithEmail = await operations.findOne('users', { email });
                 if (patientWithEmail)
-                    return res.status(400).json({ message: 'El email ya existe' });
+                    return res.status(400).json({ message: 'La cédula ya existe en el sistema' });
             }
 
             const regEx = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>\/?]).{8,}$/;
@@ -82,9 +85,9 @@ module.exports = class EditService {
 
             const updatedPatient = {
                 $set: {
-                    user:name,
+                    user,
                     cedula,
-                    age,
+                    birthDate,
                     address,
                     password: hashedPassword,
                     email,
@@ -92,7 +95,7 @@ module.exports = class EditService {
                     phone,
                     disease,
                     infoDisease,
-                    
+                    state
                 }
             };
 

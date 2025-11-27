@@ -54,11 +54,11 @@ module.exports = class CreateService {
 
             const userWithCedula = await operations.findOne('users', { 'cedula': entry.cedula });
             if (userWithCedula)
-                return res.status(400).json({ message: 'La cedula ya existe' });
+                return res.status(400).json({ message: 'La cedula ya existe en el sistema' });
 
             const userWithEmail = await operations.findOne('users', { 'email': entry.email });
             if (userWithEmail)
-                return res.status(400).json({ message: 'El email ya existe' });
+                return res.status(400).json({ message: 'El email ya existe en el sistema' });
 
             const userWithUsername = await operations.findOne('users', { 'user': entry.user });
             if (userWithUsername)

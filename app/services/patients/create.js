@@ -12,7 +12,7 @@ module.exports = class CreateService {
             let entry = {
                 user: req.body.name,
                 cedula: req.body.cedula,
-                age: req.body.age,
+                birthDate: req.body.birthDate,
                 address: req.body.address,
                 password: req.body.password,
                 email: req.body.email,
@@ -30,8 +30,8 @@ module.exports = class CreateService {
             if (!entry.cedula)
                 return res.status(400).json({ message: 'La cédula es requerida' });
 
-            if (!entry.age)
-                return res.status(400).json({ message: 'La edad es requerida' });
+            if (!entry.birthDate)
+                return res.status(400).json({ message: 'La fecha de nacimiento es requerida' });
 
             
             if (!entry.address)
@@ -52,14 +52,19 @@ module.exports = class CreateService {
           
             
 
-            // Validar unicidad de cédula y email
+            // Validar unicidad de nombre, cédula y email
+            const patientWithName = await operations.findOne('users', { 'user': entry.user });
+            if (patientWithName)
+                return res.status(400).json({ message: 'El nombre no puede ser igual ya que es el nombre con el cual van iniciar sesión' });
+
+
             const patientWithCedula = await operations.findOne('users', { 'cedula': entry.cedula });
             if (patientWithCedula)
-                return res.status(400).json({ message: 'La cédula ya existe' });
+                return res.status(400).json({ message: 'La cédula ya existe en el sistema' });
 
             const patientWithEmail = await operations.findOne('users', { 'email': entry.email });
             if (patientWithEmail)
-                return res.status(400).json({ message: 'El email ya existe' });
+                return res.status(400).json({ message: 'El email ya existe en el sistema' });
 
             // Validar contraseña segura
             const regEx = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>\/?]).{8,}$/;
@@ -71,7 +76,7 @@ module.exports = class CreateService {
             const newPatient = {
                 user: entry.user,
                 cedula: entry.cedula,
-                age: entry.age,
+                birthDate: entry.birthDate,
                 address: entry.address,
                 password: hashedPassword,
                 email: entry.email,
@@ -80,6 +85,7 @@ module.exports = class CreateService {
                 disease: entry.disease,
                 infoDisease: entry.infoDisease,
                 role:"Paciente",
+                state: entry.state
             };
             
             console.log(newPatient)

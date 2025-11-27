@@ -20,8 +20,7 @@ tokenRouter.use((req, res, next) => {
 
         jsonwebtoken.verify(token, config.JWT_SECRET, (error, datosDecodificados) => {
 
-            console.log(datosDecodificados);
-
+           
             if (error)
                 return res.status(401).json({ error: 'Autenticación expirada' });
             else {

@@ -6,7 +6,7 @@ module.exports = class CreateNoteService {
         try {
             console.log('CreateNoteService - process - Creación de nota');
 
-            const { title, content } = req.body;
+            const { title, content, noteList, idPatient } = req.body;
             const user = req.decoded.user; // Obtener el usuario del token decodificado
 
             if (!title || typeof title !== 'string' || title.trim() === '') {
@@ -21,8 +21,14 @@ module.exports = class CreateNoteService {
                 title: title.trim(),
                 content: content.trim(),
                 createdBy: user,
-                createdAt: new Date()
+                createdAt: new Date(),
+                listType: noteList || false,
             };
+
+            // Si la nota es de tipo lista (para un paciente), se agrega el idPatient
+            if (noteList === true) {
+                noteDocument.idPatient = idPatient;
+            }
 
             await operations.insertOne('notes', noteDocument);
 

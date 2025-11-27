@@ -1,5 +1,5 @@
 const { GoogleGenerativeAI } = require('@google/generative-ai');
-const operations = require('./operations');
+const operations = require('../../config/db/operations');
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -15,7 +15,12 @@ module.exports = class GenerateService {
         try {
             console.log('GenerateService - process - Generando contenido con Gemini');
 
-            const { prompt, user } = req.body;
+            const { prompt , _id } = req.body;
+
+
+            console.log("este es el _id de el paciente o se quien esta consultando",_id)
+
+            const user = req.decoded.user
 
             if (!prompt) {
                 return res.status(400).json({ message: 'El "prompt" es requerido' });
@@ -46,6 +51,7 @@ module.exports = class GenerateService {
 
             // Guardar la interacción en la colección 'messages'
             const messageLog = {
+                id:_id ,
                 user: user || 'anonymous', // Guardar 'anonymous' si no se provee usuario
                 prompt: prompt,
                 response: text,
