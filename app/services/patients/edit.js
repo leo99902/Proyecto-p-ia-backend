@@ -57,11 +57,12 @@ module.exports = class EditService {
             if (!state)
                 return res.status(400).json({ message: 'El estado es requerido' });
 
-
-            const patientWithName = await operations.findOne('users', { 'user': user });
+            // Validar unicidad del nombre de usuario solo si ha cambiado
+            if (user !== existingPatient.user) {
+                const patientWithName = await operations.findOne('users', { user });
                 if (patientWithName)
-                return res.status(400).json({ message: 'El nombre no puede ser igual ya que es el nombre con el cual van iniciar sesión' });
-
+                    return res.status(400).json({ message: 'El nombre no puede ser igual ya que es el nombre con el cual van iniciar sesión' });
+            }
 
             if (cedula !== existingPatient.cedula) {
                 const patientWithCedula = await operations.findOne('users', { cedula });
@@ -72,7 +73,7 @@ module.exports = class EditService {
             if (email !== existingPatient.email) {
                 const patientWithEmail = await operations.findOne('users', { email });
                 if (patientWithEmail)
-                    return res.status(400).json({ message: 'La cédula ya existe en el sistema' });
+                    return res.status(400).json({ message: 'El email ya existe en el sistema' });
             }
 
             const regEx = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+[\]{};':"\\|,.<>\/?]).{8,}$/;

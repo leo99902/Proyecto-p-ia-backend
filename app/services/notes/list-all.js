@@ -8,7 +8,11 @@ module.exports = class ListAllNotesService {
 
             const { name } = req.body;
 
-            const filter = {}; // Inicia con un filtro vacío
+            // Inicia con un filtro para excluir las notas de tipo lista (asociadas a pacientes)
+            const filter = {
+                listType: { $ne: true },
+                role: { $ne: 'admin' }
+            };
 
             // Si se proporciona un nombre, se agrega al filtro.
             // Asumo que el 'name' corresponde al campo 'createdBy' en la nota.

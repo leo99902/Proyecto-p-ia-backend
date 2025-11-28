@@ -8,6 +8,7 @@ module.exports = class CreateNoteService {
 
             const { title, content, noteList, idPatient } = req.body;
             const user = req.decoded.user; // Obtener el usuario del token decodificado
+              const role = req.decoded.oxcj; // Obtener el rol del token decodificado
 
             if (!title || typeof title !== 'string' || title.trim() === '') {
                 return res.status(400).json({ message: 'El título de la nota es requerido.' });
@@ -23,6 +24,7 @@ module.exports = class CreateNoteService {
                 createdBy: user,
                 createdAt: new Date(),
                 listType: noteList || false,
+                role 
             };
 
             // Si la nota es de tipo lista (para un paciente), se agrega el idPatient

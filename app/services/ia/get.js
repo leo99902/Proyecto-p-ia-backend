@@ -17,9 +17,8 @@ module.exports = class GetService {
             
                 const count = await operations.count('messages', { id: _id });
 
-                console.log(count)
 
-            ;
+            
                 return res.status(200).json({ count });
 
             } else {
